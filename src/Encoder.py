@@ -1,8 +1,6 @@
 #! /bin/python3.8
 
 
-from argparse import ArgumentParser
-
 # Adding parent directory to the path
 import sys
 import os
@@ -11,6 +9,7 @@ sys.path.append( os.path.dirname( os.path.dirname( os.path.realpath(__file__) ) 
 # Import base64 table from lib/base64_list.py
 from lib.base64_list import base64_table
 
+from ListHandler import ListHandler
 
 # Assign base64_table list to global table list
 table = base64_table
@@ -18,7 +17,11 @@ table = base64_table
 
 class Encoder:
 
-    def __init__(self, string, desired_chars=None, _all=False, file=None):
+    def __init__(self, string, desired_chars=None, File=None, All=False, append=False):
+
+
+        self.list = ListHandler(string, desired_chars, File, All, append).get()
+
         global table
         self.origin_str = string
         self.hex_str = ''
@@ -28,10 +31,6 @@ class Encoder:
         self.html_hex_str = ''
         self.unicode_str = ''
         self.base64_str = ''
-
-        self.list = ['\'', '"', '%', '<', '>', '/', '\\']
-        if desired_chars: self.list += [i for i in desired_chars]
-        if _all: self.list += [i for i in self.origin_str]
 
 
         for char in self.origin_str:
@@ -124,17 +123,3 @@ class Encoder:
         # Return encoded result
         return self.base64_str
 
-
-try:
-    o = Encoder(sys.argv[1], _all=True)
-    print(f'[+] Print origin:\n{o.origin()}')
-    print(f'[+] Print hex:\n{o.hex()}')
-    print(f'[+] Print url:\n{o.url()}')
-    print(f'[+] Print unicode:\n{o.unicode()}')
-    print(f'[+] Print html_decimal:\n{o.html_decimal()}')
-    print(f'[+] Print html_hex:\n{o.html_hex()}')
-    print(f'[+] Print bin:\n{o.bin()}')
-    print(f'[+] Print base64:\n{o.base64()}')
-
-except Exception as e:
-    print(e)
