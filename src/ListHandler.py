@@ -14,10 +14,10 @@ class ListHandler:
                 self.list += [ i for i in string ]
 
             elif desired_chars:
-                self.list = [ i for i in desired_chars.split(',') ] + (self.suggested if append else [])
+                self.list = [ i for i in desired_chars.split(',') ] + [self.suggested if append else []]
 
             elif File:
-                self.list = self.file_reader(File) + (self.suggested if append else [])
+                self.list = self.file_reader(File) + [self.suggested if append else []]
 
         except:
             pass
