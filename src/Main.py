@@ -2,6 +2,7 @@
 
 from argparse import ArgumentParser
 from Encoder import Encoder
+from Color import Color
 
 
 class Main:
@@ -40,17 +41,25 @@ class Main:
             self.printer()
 
         except Exception as e:
-            print(f"[!] Exception: {e}")
+            self.printer(e)
 
     
 
-    def printer(self):
+    def printer(self, error=None):
 
-        print(f"[+] String: {self.e.get('string')}")
-        
-        for item in self.items:
-            if self.items[ item ]:
-                print(f"[+] {item.capitalize().replace('_', ' ')} format: {self.e.get(item)}")
+        color = Color()
+
+        if error:
+            alert_mark = color.get('red', '[!]')
+            print(f"{alert_mark} Exception: {error}")
+
+        else:
+            success_mark = color.get('green', '[+]')
+            print(f"{success_mark} String: {self.e.get('string')}")
+            
+            for item in self.items:
+                if self.items[ item ]:
+                    print(f"{success_mark} {item.capitalize().replace('_', ' ')} format: {self.e.get(item)}")
 
 
 
