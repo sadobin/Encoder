@@ -1,13 +1,13 @@
 FROM python:3.8
 
-MAINTAINER MKoochaki
+MAINTAINER Mim Kooc
 
-COPY . .
+COPY . Encoder
 
-WORKDIR .
+WORKDIR Encoder
 
 RUN pip3 install -r requirements.txt
 
-ENTRYPOINT ["python3.8", "src/Encoder.py"]
+ENTRYPOINT ["python3.8", "src/Main.py"]
 
 CMD [""]
