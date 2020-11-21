@@ -20,10 +20,10 @@ table = base64_table
 
 class Encoder:
 
-    def __init__(self, string, desired_chars=None, File=None, All=False, append=False):
+    def __init__(self, string, desired_chars=None, File=None, All=False):
 
         # Building list of characters which must be encoded
-        self.list = ListHandler(string, desired_chars, File, All, append).get()
+        self.list = ListHandler(string, desired_chars, File, All).get()
 
         global table
 

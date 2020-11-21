@@ -3,21 +3,19 @@
 
 class ListHandler:
 
-    def __init__(self, string, desired_chars, File, All, append):
+    def __init__(self, string, desired_chars, File, All):
+
+        self.list = []
 
         try:
-
-            self.list = []
-            self.suggested_list = ['\'', '"', '%', '<', '>', '/', '\\']
-
             if All:
                 self.list += [ i for i in string ]
 
             elif desired_chars:
-                self.list = [ i for i in desired_chars.split(',') ] + [self.suggested if append else []]
+                self.list = [ i for i in desired_chars.split(',') ]
 
             elif File:
-                self.list = self.file_reader(File) + [self.suggested if append else []]
+                self.list = self.file_reader(File)
 
         except:
             pass

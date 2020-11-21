@@ -11,9 +11,8 @@ class Main:
 
         parser = ArgumentParser(description="Encoder project cmd arguments")
         parser.add_argument('string',            help="Input string")
-        parser.add_argument('-A',  '--all',      help="Encode all characters",          action="store_true")
-        parser.add_argument('-a',  '--append',   help="Append users input to the list", action="store_true")
-        parser.add_argument('-f',  '--file',     help="Encode each line in file",       action="store_true")
+        parser.add_argument('-a',  '--all',      help="Encode all characters",          action="store_true")
+        parser.add_argument('-f',  '--file',     help="Encode each line in file")
         parser.add_argument('-d',  '--desired',  help="Characters which will be encoded (MUST be separated by comma[,])", default="")
         parser.add_argument('-hd', '--html-dec', help="HTML encoding using ascii in decimal form",     action="store_true")
         parser.add_argument('-hx', '--html-hex', help="HTML encoding using ascii in hexadecimal form", action="store_true")
@@ -37,7 +36,7 @@ class Main:
 
 
         try:
-            self.e = Encoder(args.string, args.desired, args.file, args.all, args.append)
+            self.e = Encoder(args.string, args.desired, args.file, args.all)
             self.printer()
 
         except Exception as e:
