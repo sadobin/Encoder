@@ -1,4 +1,4 @@
-#! /bin/python3.8
+#! /bin/python3
 
 base64_table = {
 '0': 'A',

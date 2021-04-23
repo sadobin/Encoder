@@ -1,4 +1,4 @@
-#!/usr/bin/python3.8
+#!/usr/bin/python3
 
 # Importing color list 
 import os, sys
@@ -24,7 +24,6 @@ class Color:
                 string = string.replace(substr, substr_temp)
             else:
                 string = color_table[ color ].replace('__TEXT__', string)
-
 
         return string
 

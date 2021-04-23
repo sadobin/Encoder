@@ -1,67 +1,96 @@
-#! /bin/python3.8
+#! /bin/python3
 
+from FileHandler import FileHandler
 from argparse import ArgumentParser
 from Encoder import Encoder
 from Color import Color
+
+import sys
 
 
 class Main:
 
     def __init__(self):
 
-        parser = ArgumentParser(description="Encoder project cmd arguments")
-        parser.add_argument('string',            help="Input string")
-        parser.add_argument('-a',  '--all',      help="Encode all characters",          action="store_true")
-        parser.add_argument('-f',  '--file',     help="Encode each line in file")
-        parser.add_argument('-d',  '--desired',  help="Characters which will be encoded (MUST be separated by comma[,])", default="")
-        parser.add_argument('-hd', '--html-dec', help="HTML encoding using ascii in decimal form",     action="store_true")
-        parser.add_argument('-hx', '--html-hex', help="HTML encoding using ascii in hexadecimal form", action="store_true")
-        parser.add_argument('-b',  '--bin',      help="Binary format",  action="store_true")
-        parser.add_argument('-x',  '--hex',      help="Hex format",     action="store_true")
-        parser.add_argument('-B',  '--base64',   help="Base64 format",  action="store_true")
-        parser.add_argument('-u',  '--url',      help="URL format",     action="store_true")
-        parser.add_argument('-U',  '--unicode',  help="Unicode format", action="store_true")
-        args = parser.parse_args()
+        color = Color()
+        self.alert_notation   = color.get('red',   '[!]')
+        self.success_notation = color.get('green', '[+]')
 
-
-        self.items = {
-                        'bin': args.bin,
-                        'hex': args.hex,
-                        'url': args.url,
-                        'html_decimal': args.html_dec,
-                        'html_hexadecimal': args.html_hex,
-                        'base64': args.base64,
-                        'unicode': args.unicode,
-                }
-
+        self.args = self.usage()
+        self.availables = ['bin', 'hex', 'url', 'html_dec', 'html_hex', 'base64', 'unicode']
+        self.schemas = []
 
         try:
-            self.e = Encoder(args.string, args.desired, args.file, args.all)
-            self.printer()
+            if not self.args.string and not self.args.file:
+                print(f"{ self.alert_notation } No string/file was found.")
+                sys.exit(1)
+
+            encoder = Encoder(self.args.string, self.args.desired, self.args.file, self.args.all)
+            self.handle_result(encoder)
 
         except Exception as e:
-            self.printer(e)
+            print(f"{self.alert_notation} Exception: {e}")
+            sys.exit(1)
 
     
+    def usage(self):
 
-    def printer(self, error=None):
+        parser = ArgumentParser(description="Encoder project cmd arguments")
 
-        color = Color()
+        parser.add_argument('string',            help="Input string", nargs="?")
+        parser.add_argument('-A',                help="Print all encoding schema for the given input(s)", action="store_true")
+        parser.add_argument('-a',  '--all',      help="Encode all characters", action="store_true")
+        parser.add_argument('-d',  '--desired',  help="Characters which will be encoded", default="")
+        parser.add_argument('-f',  '--file',     help="Encode each line in file")
+        parser.add_argument('-w',  '--write',    help="Write the result into the encoder.json")
+        parser.add_argument('-b',  '--bin',      help="Binary format", action="store_true")
+        parser.add_argument('-x',  '--hex',      help="Hex format", action="store_true")
+        parser.add_argument('-B',  '--base64',   help="Base64 format", action="store_true")
+        parser.add_argument('-u',  '--url',      help="URL format", action="store_true")
+        parser.add_argument('-U',  '--unicode',  help="Unicode format", action="store_true")
+        parser.add_argument('-hd', '--html-dec', help="HTML encoding using ascii in decimal form", action="store_true")
+        parser.add_argument('-hx', '--html-hex', help="HTML encoding using ascii in hexadecimal form", action="store_true")
 
-        if error:
-            alert_mark = color.get('red', '[!]')
-            print(f"{alert_mark} Exception: {error}")
+        return parser.parse_args()
+
+
+    def handle_result(self, encoder):
+
+        encoder_result = encoder.get_result()
+        result = {}
+        
+        if not self.args.A:
+
+            # Append user defined schemas to the self.schemas from self.args
+            for a in self.availables:
+                if vars(self.args)[a]:
+                    self.schemas.append(a)
+
+            # Add user-defined schemas value to the result
+            for line in encoder_result:
+                result[line] = {}
+                for s in encoder_result[line]:
+                    if s in self.schemas:
+                        result[line][s] = encoder_result[line][s]
 
         else:
-            success_mark = color.get('green', '[+]')
-            print(f"{success_mark} String: {self.e.get('string')}")
-            
-            for item in self.items:
-                if self.items[ item ]:
-                    print(f"{success_mark} {item.capitalize().replace('_', ' ')} format: {self.e.get(item)}")
+            result = encoder_result.copy()
 
 
+        if self.args.write:
+            FileHandler().file_writer(self.args.write, result)
+
+        else:
+
+            for line in result:
+                print(f"{self.success_notation} String: {line}")
+
+                for k,v in result[line].items():
+                    print(f"{self.success_notation} {k.capitalize().replace('_', ' ')}: {v}")
+                
+                print()
 
 
-main = Main()
+if __name__ == "__main__":
+    Main()
 
