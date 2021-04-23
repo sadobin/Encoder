@@ -6,12 +6,9 @@ import json
 
 class FileHandler:
 
-    def __init__(self, input_file):
+    def __init__(self):
 
-        self.input_file = input_file
-        self.lines = []
-
-        self.file_reader()
+        self._lines = []
 
 
     def file_writer(self, filename, data):
@@ -20,12 +17,11 @@ class FileHandler:
             f.write( json.dumps( data, indent=4 ) )
 
 
+    def file_reader(self, filename):
 
-    def file_reader(self):
-
-        with open(self.input_file, 'r') as f:
-            self.lines += [ l for l in f.read().splitlines() ]
+        with open(filename, 'r') as f:
+            self._lines += [ l for l in f.read().splitlines() ]
 
 
     def get_lines(self):
-        return self.lines
+        return self._lines

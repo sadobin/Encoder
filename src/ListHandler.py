@@ -1,33 +1,23 @@
-#! /bin/python3.8
+#! /bin/python3
+
+# Appending parent directory to the path
+import sys, os
+sys.path.append( os.path.dirname( os.path.dirname( os.path.realpath(__file__) ) ) )
 
 
 class ListHandler:
 
-    def __init__(self, string, desired_chars, File, All):
+    def __init__(self, lines, desired_chars, all_chars):
 
         self.list = []
 
-        try:
-            if All:
-                self.list += [ i for i in string ]
+        if all_chars:
+            temp = ''.join( l for l in lines)
+            self.list += [ i for i in temp+desired_chars ]
 
-            elif desired_chars:
-                self.list = [ i for i in desired_chars.split(',') ]
-
-            elif File:
-                self.list = self.file_reader(File)
-
-        except:
-            pass
+        elif desired_chars:
+            self.list = [ i for i in desired_chars ]
 
 
-    def file_reader(self, File):
-
-        with open(File, 'r') as f:
-            lines = []
-            lines += [ l for l in f.read().splitlines() ]
-            return lines
-
-
-    def get(self):
+    def get_list(self):
         return self.list
